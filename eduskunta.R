@@ -1,19 +1,12 @@
-#Eduskuntadatan hakemiseen kirjoitettu R-sovellus, jolla saa helposti R:ään data frameksi XML-muotoista dataa. 
+#Eduskuntadatan hakemiseen kirjoitettu R-skripti
+# 
+# getEdustajaData -funktio hakee per äänestys kunkin edustajan nimen, puolueen sekä valinnan
 #
 #
-# getEdustajat
-#     - Hakee eduskunta-aineistoista halutun äänestyksen tiedot kansanedustajaittain (kaikki kansanedustajat).
-# getPuolueet 
-#     - Hakee eduskunta-aineistoista halutun äänestyksen tulokset puolueittain (kaikki puolueet, myös ne joita ei ole tällä hetkellä eduskunnassa)
-#
+# 
 
 getEdustajaData <- function(aanestys)
-{
-  #Hakee äänestyksen tulokset ehdokkaittain
-  #input aanestys Äänestyksen numero
-  #output data.frame
-  # colnames(output) == c('nimi','valinta','puolue') == TRUE
-  
+{  
   library(XML)
   baseurl <- "http://www.biomi.org/eduskunta/?haku=aanestys&id="
   if(is.na(aanestys)) {
