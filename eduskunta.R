@@ -17,7 +17,7 @@ getEdustajaData <- function(aanestys)
     ekdat.tree <- xmlParse(search_url)
     ekdat.edustajat <- getNodeSet(ekdat.tree, path="//edustajat/edustaja")
     if(length(ekdat.edustajat) == 0) {
-      stop('Virheellinen Äänestys-id')
+      stop('Virheellinen äänestys-id')
     }
     df <- xmlToDataFrame(ekdat.edustajat)
     df$valinta <- as.factor(df$valinta)
