@@ -1,11 +1,5 @@
 #Eduskuntadatan hakemiseen kirjoitettu R-sovellus, jolla saa helposti R:ään data frameksi XML-muotoista dataa. 
 #
-# GetAllAanestykset
-#     -Hakee biomi.orgin rajapinnasta kaikki saatavilla olevat äänestykset rajapinnan rajoitusten mukaisesti
-# 
-# GetEdustajaData 
-#     - Hakee kaikkien edustajien äänestystulokset   
-#
 #
 
 GetAllAanestykset <- function() {
