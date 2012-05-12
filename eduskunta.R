@@ -1,12 +1,31 @@
-#Eduskuntadatan hakemiseen kirjoitettu R-skripti
+#Eduskuntadatan hakemiseen kirjoitettu R-sovellus, jolla saa helposti R:ään data frameksi XML-muotoista dataa. 
+#
+# GetAllAanestykset
+#     -Hakee biomi.orgin rajapinnasta kaikki saatavilla olevat äänestykset rajapinnan rajoitusten mukaisesti
 # 
-# getEdustajaData -funktio hakee per äänestys kunkin edustajan nimen, puolueen sekä valinnan
+# GetEdustajaData 
+#     - Hakee kaikkien edustajien äänestystulokset   
 #
 #
-# 
 
-getEdustajaData <- function(aanestys)
-{  
+GetAllAanestykset <- function() {
+  #Hakee kaikki äänestykset
+  library(XML)
+  url <- "http://www.biomi.org/eduskunta/"
+  kaikki.tree <- xmlParse(url)
+  tunnisteet <- getNodeSet(kaikki.tree, path='//luettelo/aanestys/tunniste')
+  out <- xmlToDataFrame(tunnisteet)
+  out <- as.character(out$text)
+  return(out)
+  
+}
+
+
+GetEdustajaData <- function(aanestys)
+{
+  #Hakee kaikkien edustajien äänestystulokset tietystä äänestyksestä. 
+  #@input: äänestyksen tunniste
+  #@output: data.frame 
   library(XML)
   baseurl <- "http://www.biomi.org/eduskunta/?haku=aanestys&id="
   if(is.na(aanestys)) {
@@ -17,13 +36,41 @@ getEdustajaData <- function(aanestys)
     ekdat.tree <- xmlParse(search_url)
     ekdat.edustajat <- getNodeSet(ekdat.tree, path="//edustajat/edustaja")
     if(length(ekdat.edustajat) == 0) {
-      stop('Virheellinen äänestys-id')
+      stop('Virheellinen Äänestys-id')
     }
     df <- xmlToDataFrame(ekdat.edustajat)
     df$valinta <- as.factor(df$valinta)
     df$puolue <- as.factor(df$puolue)
     df$nimi <- as.character(df$nimi)
   }
+  return(df)
+}
+
+GetEdustajanAanestykset <- function(edustaja) {
+  #Hakee tietyn edustajan kaikkien äänestysten tiedot
+  #@input: Kansanedustajan nimi muodossa Sukunimi Etunimi 
+  #@output: data.frame
+  #Toistaiseksi täysin toimimaton funktio ;)
+
+  edustaja <- URLencode(edustaja)
+  url <- "http://www.biomi.org/eduskunta/?haku=edustaja&id"
+  url.haku <- paste(url, edustaja, sep="=")
+  edustaja.puu <- xmlParse(url.haku)
+  aanestykset <- getNodeSet(edustaja.puu, path='//edustaja/aanestys/tiedot')
+  df <- xmlToDataFrame(aanestykset)
+  return(df)
+}
+
+haeHakuSanalla <- function(hakusana) {
+  #Hakee hakusanalla 20 äänestystä
+  #@input: hakusana
+  #@output: data frame, jossa on tuloksena haettavien äänestysten tiedot
+  hakusana <- URLencode(hakusana)
+  url <- "http://www.biomi.org/eduskunta/?haku=sanahaku&id"
+  url.haku <- paste(url, hakusana, sep="=")
+  aanestykset.puu <- xmlParse(url.haku)
+  aanestykset <- getNodeSet(aanestykset.puu, path="//aanestykset/aanestys/tiedot")
+  df <- xmlToDataFrame(aanestykset)
   return(df)
 }
 
