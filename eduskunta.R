@@ -1,6 +1,7 @@
 #Eduskuntadatan hakemiseen kirjoitettu R-sovellus, jolla saa helposti R:ään data frameksi XML-muotoista dataa. 
 #
 #
+<<<<<<< HEAD
 
 GetAllAanestykset <- function() {
   #Hakee kaikki äänestykset
@@ -20,6 +21,28 @@ GetEdustajaData <- function(aanestys)
   #Hakee kaikkien edustajien äänestystulokset tietystä äänestyksestä. 
   #@input: äänestyksen tunniste
   #@output: data.frame 
+=======
+# getEdustajat
+#     - Hakee eduskunta-aineistoista halutun äänestyksen tiedot kansanedustajaittain (kaikki kansanedustajat).
+# getPuolueet 
+#     - Hakee eduskunta-aineistoista halutun äänestyksen tulokset puolueittain (kaikki puolueet, myös ne joita ei ole tällä hetkellä eduskunnassa)
+#
+GetAllAanestykset <- function() {
+  library(XML)
+  url <- "http://www.biomi.org/eduskunta/"
+  kaikki.tree <- xmlParse(url)
+  tunnisteet <- getNodeSet(kaikki.tree, path='//luettelo/aanestys/tunniste')
+  out <- xmlToDataFrame(tunnisteet)
+  out <- as.character(out$text)
+  return(out)
+  
+}
+
+
+GetEdustajaData <- function(aanestys)
+{
+
+>>>>>>> Muutoksia
   library(XML)
   baseurl <- "http://www.biomi.org/eduskunta/?haku=aanestys&id="
   if(is.na(aanestys)) {
@@ -41,11 +64,14 @@ GetEdustajaData <- function(aanestys)
 }
 
 GetEdustajanAanestykset <- function(edustaja) {
+<<<<<<< HEAD
   #Hakee tietyn edustajan kaikkien äänestysten tiedot
   #@input: Kansanedustajan nimi muodossa Sukunimi Etunimi 
   #@output: data.frame
   #Toistaiseksi täysin toimimaton funktio ;)
 
+=======
+>>>>>>> Muutoksia
   edustaja <- URLencode(edustaja)
   url <- "http://www.biomi.org/eduskunta/?haku=edustaja&id"
   url.haku <- paste(url, edustaja, sep="=")
@@ -56,9 +82,12 @@ GetEdustajanAanestykset <- function(edustaja) {
 }
 
 haeHakuSanalla <- function(hakusana) {
+<<<<<<< HEAD
   #Hakee hakusanalla 20 äänestystä
   #@input: hakusana
   #@output: data frame, jossa on tuloksena haettavien äänestysten tiedot
+=======
+>>>>>>> Muutoksia
   hakusana <- URLencode(hakusana)
   url <- "http://www.biomi.org/eduskunta/?haku=sanahaku&id"
   url.haku <- paste(url, hakusana, sep="=")
